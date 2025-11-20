@@ -1,6 +1,9 @@
 from pathlib import Path
 from typing import Iterable
 
+#Utility Functions for Data Processing
+#Author: Meriem Lmoubariki
+#Common functions for text cleaning, I/O, and formatting
 
 def iter_meeting_files(input_dir: Path) -> Iterable[Path]:
     """

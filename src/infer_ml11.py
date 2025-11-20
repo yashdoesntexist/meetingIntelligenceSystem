@@ -10,10 +10,6 @@ from ami_loader import load_meeting, Utterance
 from action_rules import extract_task_and_deadline
 from utils import iter_meeting_files
 
-# ----------------------------------------------------------
-# ULTRA-STRICT RULE FILTERS FOR ACTION ITEMS
-# ----------------------------------------------------------
-
 # Verbs that usually mark a concrete action
 ACTION_VERBS = {
     "send", "email", "share", "prepare", "update", "review", "finish",
@@ -100,6 +96,32 @@ REQUEST_PREFIXES = [
     "shall we",
     "should we",
     "let us",
+    "i am going to",
+    "we are going to",
+    "i'm gonna",
+    "we're gonna",
+    "i am planning to",
+    "we are planning to",
+    "i intend to",
+    "we intend to",
+    "i was wondering if you could",
+    "would it be possible to",
+    "is there any chance you could",
+    "i need you to",
+    "we need you to",
+    "i want you to",
+    "we want you to",
+    "id like you to",
+    "wed like you to",
+    "yo can you",
+    "hey can you",
+    "bro can you",
+    "man can you",
+    "listen can you",
+    "ok can you",
+    "hey let's",
+    "ok let's",
+
 ]
 
 

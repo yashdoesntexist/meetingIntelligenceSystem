@@ -72,3 +72,120 @@ Record 2–3 minutes: run extract, show actions.json, open Streamlit and filter 
 - Video demo: follow `scripts/demo_checklist.txt` and export `video_demo.mp4`.
 - References: `references.docx` + `references.md` pre-created, cite corpus and software.
 - AI usage: `AI_USAGE.md` and export ChatGPT PDF to images/.
+
+
+### Member 1 - Meriem Lmoubariki (Data & Pipeline Engineer)
+**Role**: Handle all dataset ingestion, preprocessing, and pipeline architecture
+
+**Responsibilities**:
+- Dataset ingestion and preprocessing from AMI corpus
+- Build audio/video → text extraction pipeline
+- Integrate AMI corpus loading and processing
+- Ensure data quality for ML and rule-based systems
+
+**Files Owned**:
+- `src/ami_loader.py` - Loads AMI meeting corpus, converts annotations, normalizes formats
+- `src/extract.py` - Handles transcript extraction, segmentation, speaker parsing
+- `src/video_pipeline.py` - Runs full audio/video → text pipeline (ASR, diarization, timestamps)
+- `src/utils.py` - Shared utility functions for text cleaning, formatting, I/O
+
+**Key Deliverables**:
+- End-to-end pipeline transforming raw meeting files into structured JSON
+- Documentation of AMI dataset structure and preprocessing steps
+- Data quality validation ensuring 85%+ transcript accuracy
+
+**Timeline**:
+- Nov 20-22: AMI corpus loader and data preprocessing
+- Nov 23-27: Extraction pipeline and video processing
+- Nov 28-Dec 1: Pipeline integration and testing
+- Dec 2-4: Data quality validation and documentation
+
+---
+
+### Member 2 - Rajwinder Singh (NLP & Rule-Based Action Item Engineer)
+**Role**: Implement linguistic analysis and rule-based extraction logic
+
+**Responsibilities**:
+- Implement rule-based logic for detecting action items in transcripts
+- Build coreference resolution and temporal parsing
+- Integrate linguistic heuristics into the main system
+
+**Files Owned**:
+- `src/action_rules.py` - Pattern-based action item detection (verbs, assignments, deadlines)
+- `src/coref_simple.py` - Resolves pronouns ("he", "she", "they") to real speakers
+- `src/temporal.py` - Extracts time expressions (e.g., "tomorrow", "by next week")
+- `processors/action_extraction.py` - Core action extraction processor
+
+**Key Deliverables**:
+- High-precision rule-based action item engine
+- Coreference handling mapping assignments to real speakers
+- Temporal extraction logic integrated into outputs
+
+**Timeline**:
+- Nov 21-23: Rule-based pattern implementation
+- Nov 24-26: Coreference resolution system
+- Nov 27-29: Temporal reasoning and date extraction
+- Nov 30-Dec 4: Integration testing and refinement
+
+---
+
+### Member 3 - [Name] (Machine Learning Engineer)
+**Role**: Build, train, and evaluate ML models for action item detection
+
+**Responsibilities**:
+- Build and train ML models for action item detection
+- Integrate ML inference into system pipeline
+- Evaluate accuracy, recall, and precision
+- Tune hyperparameters and optimize performance
+
+**Files Owned**:
+- `src/train_ml.py` - Model training loop, feature extraction, dataset split, metrics
+- `src/infer_ml.py` - ML-based action item prediction for new meeting transcripts
+- `src/infer_ml11.py` - Enhanced ML inference with improved features
+- `src/evaluate.py` - Compare rule-based vs ML performance, confusion matrices
+- `src/config.py` (shared) - Hyperparameters, model paths, thresholds
+
+**Key Deliverables**:
+- Trained machine learning model (TF-IDF + Logistic Regression)
+- Weak supervision approach using rule-based labels
+- Metrics and evaluation report with precision/recall/F1 scores
+- Integrated inference interface for production use
+
+**Timeline**:
+- Nov 22-25: Feature engineering and dataset preparation
+- Nov 26-28: Model training and validation
+- Nov 29-Dec 1: ML inference integration
+- Dec 2-4: Evaluation and performance optimization
+
+---
+
+### Member 4 - Yashraj Parmar (Front-End & Application Developer)
+**Role**: Build all user-facing interfaces and ensure seamless UX
+
+**Responsibilities**:
+- Build user-facing interfaces for the entire system
+- Create desktop GUI with modern design (Tkinter)
+- Deploy web interface using Streamlit
+- Ensure seamless integration with backend components
+
+**Files Owned**:
+- `src/gui.py` - Desktop GUI (clickable tiles, squircle design, modern interface)
+- `src/app_cli.py` - Command-line pipeline runner
+- `src/app_streamlit.py` - Browser-based app for demo and grading
+- `scripts/run_streamlit.bat` - Streamlit launch automation
+- `src/action_rules.py` (contributed) - Helped refine action patterns with Rajwinder
+
+**Key Deliverables**:
+- Fully functional desktop GUI where users can:
+  - Upload video/audio/text files
+  - Run extraction pipeline
+  - View action items with timestamps and assignees
+- Streamlit web app for simplified demo
+- User documentation and interface guides
+
+**Timeline**:
+- Nov 20-22: Project setup and CLI development
+- Nov 23-26: Desktop GUI design and implementation
+- Nov 27-29: Streamlit dashboard creation
+- Nov 30-Dec 2: Integration with backend pipeline
+- Dec 3-4: UI polish and user testing

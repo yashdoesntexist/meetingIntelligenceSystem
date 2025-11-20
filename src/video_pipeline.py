@@ -108,3 +108,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#one note for you guys, one task in to do list is to improve error handling for corrupted video files we can think about it 
