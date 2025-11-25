@@ -73,7 +73,7 @@ def main(
         print(classification_report(y_test, y_pred))
 
     joblib.dump(clf, model_path)
-    print(f"[reen]Saved model -> {model_path}[/green]")
+    print(f"[green]Saved model -> {model_path}[/green]")
 
 
 if __name__ == "__main__":
