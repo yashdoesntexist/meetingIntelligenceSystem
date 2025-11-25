@@ -29,7 +29,7 @@ def main(
     X: List[str] = []
     y: List[int] = []
 
-    for p in iter_meeting_files(input_path):
+    for p in iter_meeting_files(input_path):   
         meeting = load_meeting(p, input_path / "roles.csv")
         for utt in meeting.utterances:
             X.append(utt.text)
@@ -73,7 +73,7 @@ def main(
         print(classification_report(y_test, y_pred))
 
     joblib.dump(clf, model_path)
-    print(f"[green]Saved model -> {model_path}[/green]")
+    print(f"[reen]Saved model -> {model_path}[/green]")
 
 
 if __name__ == "__main__":
