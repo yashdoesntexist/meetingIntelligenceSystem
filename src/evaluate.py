@@ -9,11 +9,11 @@ GOLD = PROCESSED_DIR / "gold.json"
 
 def normalize(s: str) -> str:
     return " ".join(s.lower().split())
-
+#  creating action.json file
 def main():
     if not PRED.exists() or not GOLD.exists():
         print("Missing predictions or gold. Create data/processed/gold.json first.")
-        return
+        return                      
     pred = pd.read_json(PRED)
     gold = pd.read_json(GOLD)
     pred["key"] = pred["assignee"].fillna("").map(normalize) + " | " + pred["action_item"].fillna("").map(normalize)
