@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 RAW_DIR = DATA_DIR / "raw" / "AMI"
 PROCESSED_DIR = DATA_DIR / "processed"
-
+# to make sure directories exist
 DEFAULT_OUTPUT_JSON = PROCESSED_DIR / "actions.json"
 DEFAULT_MODEL_PATH = PROCESSED_DIR / "clf.joblib"
 
