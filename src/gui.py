@@ -1,33 +1,153 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox
 import json
 import subprocess
 import sys
 from pathlib import Path
 from config import ROOT, RAW_DIR, DEFAULT_OUTPUT_JSON
 
+
+# Draw rounded rectangle (squircle-like)
+def create_round_rect(canvas, x1, y1, x2, y2, radius=25, **kwargs):
+    points = [
+        x1+radius, y1,
+        x1+radius, y1,
+        x2-radius, y1,
+        x2-radius, y1,
+        x2, y1,
+        x2, y1+radius,
+        x2, y1+radius,
+        x2, y2-radius,
+        x2, y2-radius,
+        x2, y2,
+        x2-radius, y2,
+        x2-radius, y2,
+        x1+radius, y2,
+        x1+radius, y2,
+        x1, y2,
+        x1, y2-radius,
+        x1, y2-radius,
+        x1, y1+radius,
+        x1, y1+radius,
+        x1, y1
+    ]
+    return canvas.create_polygon(points, smooth=True, **kwargs)
+
+
 class App:
     def __init__(self, root):
         self.root = root
-        root.title("Meeting Intel GUI")
-        root.geometry("850x600")
+        root.title("Meeting Intelligence System")
+        root.geometry("1100x760")
+        root.configure(bg="#0d0d0d")
 
-        ttk.Label(root, text="Meeting Intelligence System", font=("Helvetica", 20, "bold")).pack(pady=10)
+        header = tk.Label(root, text="Meeting Intelligence System",
+                          font=("Helvetica", 28, "bold"),
+                          fg="white", bg="#0d0d0d")
+        header.pack(anchor="w", padx=40, pady=(25, 5))
 
-        frame = ttk.Frame(root)
-        frame.pack(pady=10)
+        sub = tk.Label(root, text="Dashboard",
+                       font=("Helvetica", 14),
+                       fg="#bfbfbf", bg="#0d0d0d")
+        sub.pack(anchor="w", padx=40, pady=(0, 25))
 
-        ttk.Button(frame, text="Process Video File", width=40, command=self.process_video).grid(row=0, column=0, pady=6)
-        ttk.Button(frame, text="Re-run on Existing Transcripts", width=40, command=self.process_transcripts_only).grid(row=1, column=0, pady=6)
-        ttk.Button(frame, text="Show Action Items", width=40, command=self.show_actions).grid(row=2, column=0, pady=6)
-        ttk.Button(frame, text="Show Transcript", width=40, command=self.show_transcript).grid(row=3, column=0, pady=6)
-        ttk.Button(frame, text="Exit", width=40, command=root.quit).grid(row=4, column=0, pady=6)
+        # tile container
+        container = tk.Frame(root, bg="#0d0d0d")
+        container.pack(fill="x", padx=40)
 
-        ttk.Label(root, text="Output:", font=("Helvetica", 14)).pack()
+        # ROW 1
+        self.make_tile(container, "Process Video File",
+                       "Run full pipeline on a new video",
+                       self.process_video).grid(row=0, column=0, padx=20, pady=20)
 
-        self.output = tk.Text(root, height=20, wrap=tk.WORD, font=("Consolas", 11))
-        self.output.pack(fill="both", expand=True, padx=10, pady=10)
+        self.make_tile(container, "Re-run on Transcripts",
+                       "Train + infer on existing transcripts",
+                       self.process_transcripts_only).grid(row=0, column=1, padx=20, pady=20)
 
+        # ROW 2
+        self.make_tile(container, "Show Action Items",
+                       "View current actions.json",
+                       self.show_actions).grid(row=1, column=0, padx=20, pady=20)
+
+        self.make_tile(container, "Show Transcript",
+                       "View processed transcript files",
+                       self.show_transcript).grid(row=1, column=1, padx=20, pady=20)
+
+        # EXIT row
+        self.make_tile(container, "Exit",
+                       "Close the application",
+                       root.quit, wide=True).grid(row=2, column=0, columnspan=2, padx=20, pady=20)
+
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_columnconfigure(1, weight=1)
+
+        # Output section
+        out_lbl = tk.Label(root, text="Output",
+                           font=("Helvetica", 14),
+                           fg="#bfbfbf", bg="#0d0d0d")
+        out_lbl.pack(anchor="w", padx=40, pady=(15, 5))
+
+        self.output = tk.Text(root,
+                              height=12,
+                              wrap=tk.WORD,
+                              font=("Consolas", 12),
+                              bg="#111111",
+                              fg="white",
+                              insertbackground="white",
+                              relief="flat",
+                              borderwidth=12)
+        self.output.pack(fill="both", expand=True, padx=40, pady=(0, 30))
+
+    # =====================
+    # PREMIUM TILE CREATION
+    # =====================
+    def make_tile(self, parent, title, desc, command, wide=False):
+        w = 460 if wide else 440
+        h = 150
+
+        canvas = tk.Canvas(parent,
+                           width=w,
+                           height=h,
+                           bg="#0d0d0d",
+                           highlightthickness=0)
+        canvas.tile_bg = create_round_rect(canvas,
+                                           5, 5, w-5, h-5,
+                                           radius=28,
+                                           fill="#1a1a1a",
+                                           outline="")
+
+        # Text
+        canvas.create_text(40, 45,
+                           text=title,
+                           anchor="w",
+                           fill="white",
+                           font=("Helvetica", 18, "bold"))
+        canvas.create_text(40, 85,
+                           text=desc,
+                           anchor="w",
+                           fill="#b0b0b0",
+                           font=("Helvetica", 12))
+
+        # Hover animation
+        def on_enter(e):
+            canvas.itemconfig(canvas.tile_bg, fill="#262626")
+
+        def on_leave(e):
+            canvas.itemconfig(canvas.tile_bg, fill="#1a1a1a")
+
+        # Click
+        def on_click(e):
+            command()
+
+        canvas.bind("<Enter>", on_enter)
+        canvas.bind("<Leave>", on_leave)
+        canvas.bind("<Button-1>", on_click)
+
+        return canvas
+
+    # =====================
+    # ORIGINAL BACKEND LOGIC
+    # =====================
     def write(self, text):
         self.output.config(state="normal")
         self.output.insert(tk.END, text + "\n")
@@ -38,66 +158,52 @@ class App:
         try:
             subprocess.run(cmd, check=True, cwd=cwd)
             return True
-        except:
-            messagebox.showerror("Error", "A subprocess failed.")
+        except Exception as e:
+            messagebox.showerror("Error", f"A subprocess failed:\n{e}")
             return False
 
     def process_video(self):
         video_path = filedialog.askopenfilename(filetypes=[("MP4 files", "*.mp4")])
         if not video_path:
             return
-
         name = Path(video_path).name
         dest = ROOT / name
-
         if Path(video_path) != dest:
             dest.write_bytes(Path(video_path).read_bytes())
-
         bat = ROOT / "scripts" / "process_video.bat"
         if not bat.exists():
             messagebox.showerror("Error", "process_video.bat not found.")
             return
-
         self.write(f"Processing {name}...")
         if self.run([str(bat), name], ROOT):
-            self.write("Processing complete.\n")
+            self.write("Processing complete.")
             self.show_actions()
 
     def process_transcripts_only(self):
-        if messagebox.askyesno("Confirm", "Re-run on transcripts only?") is False:
+        if not messagebox.askyesno("Confirm", "Re-run on transcripts only?"):
             return
-
-        self.write("Training model...")
-        if not self.run([sys.executable, "src/train_ml.py"], ROOT):
-            return
-
-        self.write("Running inference...")
-        if not self.run([sys.executable, "src/infer_ml.py"], ROOT):
-            return
-
-        self.write("Done.\n")
+        self.write("Training...")
+        if not self.run([sys.executable, "src/train_ml.py"], ROOT): return
+        self.write("Inferring...")
+        if not self.run([sys.executable, "src/infer_ml.py"], ROOT): return
+        self.write("Done.")
         self.show_actions()
 
     def show_actions(self):
         path = Path(DEFAULT_OUTPUT_JSON)
-        self.output.config(state="normal")
-        self.output.delete("1.0", tk.END)
-        self.output.config(state="disabled")
-
+        self.output.delete("1.0", "end")
         if not path.exists():
             self.write("actions.json not found.")
             return
-
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text())
         if not data:
             self.write("No action items found.")
             return
-
         for i, item in enumerate(data, 1):
-            self.write(f"{i}. [meeting: {item.get('meeting')} | speaker: {item.get('speaker')}]")
+            self.write(f"{i}. [{item.get('meeting')} | {item.get('speaker')}]")
             self.write(f"   action: {item.get('action_item')}")
             if item.get("deadline_text"):
-                self.write(f"   deadline: {item.get('deadline_text')} (ISO: {item.get('deadline_iso')})")
+                self.write(f"   deadline: {item.get('deadline_text')} ({item.get('deadline_iso')})")
             self.write("")
 
     def show_transcript(self):
@@ -105,35 +211,11 @@ class App:
         if not files:
             messagebox.showinfo("Info", "No transcript files found.")
             return
+        f = files[0]
+        content = f.read_text()
+        self.output.delete("1.0", "end")
+        self.output.insert("end", content)
 
-        if len(files) == 1:
-            f = files[0]
-        else:
-            win = tk.Toplevel(self.root)
-            win.title("Select Transcript")
-            lb = tk.Listbox(win, width=40, height=10)
-            lb.pack(padx=10, pady=10)
-
-            for x in files:
-                lb.insert(tk.END, x.name)
-
-            def choose():
-                sel = lb.curselection()
-                if not sel:
-                    return
-                nonlocal f
-                f = files[sel[0]]
-                win.destroy()
-
-            ttk.Button(win, text="Open", command=choose).pack(pady=5)
-            win.grab_set()
-            win.wait_window()
-
-        content = f.read_text(encoding="utf-8")
-        self.output.config(state="normal")
-        self.output.delete("1.0", tk.END)
-        self.output.insert(tk.END, content)
-        self.output.config(state="disabled")
 
 root = tk.Tk()
 App(root)
