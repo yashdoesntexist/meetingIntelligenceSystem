@@ -7,7 +7,6 @@ from pathlib import Path
 from config import ROOT, RAW_DIR, DEFAULT_OUTPUT_JSON
 
 
-# Draw rounded rectangle (squircle-like)
 def create_round_rect(canvas, x1, y1, x2, y2, radius=25, **kwargs):
     points = [
         x1+radius, y1,
@@ -51,11 +50,10 @@ class App:
                        fg="#bfbfbf", bg="#0d0d0d")
         sub.pack(anchor="w", padx=40, pady=(0, 25))
 
-        # tile container
         container = tk.Frame(root, bg="#0d0d0d")
         container.pack(fill="x", padx=40)
 
-        # ROW 1
+
         self.make_tile(container, "Process Video File",
                        "Run full pipeline on a new video",
                        self.process_video).grid(row=0, column=0, padx=20, pady=20)
@@ -64,7 +62,7 @@ class App:
                        "Train + infer on existing transcripts",
                        self.process_transcripts_only).grid(row=0, column=1, padx=20, pady=20)
 
-        # ROW 2
+
         self.make_tile(container, "Show Action Items",
                        "View current actions.json",
                        self.show_actions).grid(row=1, column=0, padx=20, pady=20)
@@ -73,7 +71,7 @@ class App:
                        "View processed transcript files",
                        self.show_transcript).grid(row=1, column=1, padx=20, pady=20)
 
-        # EXIT row
+
         self.make_tile(container, "Exit",
                        "Close the application",
                        root.quit, wide=True).grid(row=2, column=0, columnspan=2, padx=20, pady=20)
@@ -81,7 +79,7 @@ class App:
         container.grid_columnconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=1)
 
-        # Output section
+
         out_lbl = tk.Label(root, text="Output",
                            font=("Helvetica", 14),
                            fg="#bfbfbf", bg="#0d0d0d")
@@ -98,9 +96,6 @@ class App:
                               borderwidth=12)
         self.output.pack(fill="both", expand=True, padx=40, pady=(0, 30))
 
-    # =====================
-    # PREMIUM TILE CREATION
-    # =====================
     def make_tile(self, parent, title, desc, command, wide=False):
         w = 460 if wide else 440
         h = 150
@@ -116,7 +111,7 @@ class App:
                                            fill="#1a1a1a",
                                            outline="")
 
-        # Text
+
         canvas.create_text(40, 45,
                            text=title,
                            anchor="w",
@@ -128,14 +123,13 @@ class App:
                            fill="#b0b0b0",
                            font=("Helvetica", 12))
 
-        # Hover animation
         def on_enter(e):
             canvas.itemconfig(canvas.tile_bg, fill="#262626")
 
         def on_leave(e):
             canvas.itemconfig(canvas.tile_bg, fill="#1a1a1a")
 
-        # Click
+
         def on_click(e):
             command()
 
@@ -145,9 +139,7 @@ class App:
 
         return canvas
 
-    # =====================
-    # ORIGINAL BACKEND LOGIC
-    # =====================
+
     def write(self, text):
         self.output.config(state="normal")
         self.output.insert(tk.END, text + "\n")
