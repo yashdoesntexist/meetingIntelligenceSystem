@@ -44,20 +44,16 @@ def main(
     neg = len(y) - pos
     print(f"[cyan]Training data: {len(X)} utterances (pos={pos}, neg={neg})[/cyan]")
 
-    # If we don't have both classes, skip ML (rules only)
     if len(set(y)) < 2:
         print("[yellow]Not enough class variety. Skipping ML training, rules-only mode.[/yellow]")
-        # If a previous model exists, you can optionally delete it or overwrite
         return
 
-    # If classes are very imbalanced, avoid stratification errors
     try:
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42, stratify=y
         )
         do_report = True
     except ValueError:
-        # fall back to no test split
         X_train, y_train = X, y
         X_test, y_test = [], []
         do_report = False
