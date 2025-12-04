@@ -185,7 +185,7 @@ class App:
         path = Path(DEFAULT_OUTPUT_JSON)
         self.output.delete("1.0", "end")
         if not path.exists():
-            self.write("actions.json not found.")
+            self.write("actions file not found.")
             return
         data = json.loads(path.read_text())
         if not data:
