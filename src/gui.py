@@ -64,7 +64,7 @@ class App:
 
 
         self.make_tile(container, "Show Action Items",
-                       "View current actions.json",
+                       "View current actions",
                        self.show_actions).grid(row=1, column=0, padx=20, pady=20)
 
         self.make_tile(container, "Show Transcript",
