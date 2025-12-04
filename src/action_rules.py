@@ -2,6 +2,7 @@ from __future__ import annotations
 import re
 from typing import Optional, Dict
 
+# Phrases that usually start an action or request
 
 CLEAN_TRIGGERS = [
     "we need to",
