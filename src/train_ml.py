@@ -29,7 +29,7 @@ def main(
     X: List[str] = []
     y: List[int] = []
 
-    for p in iter_meeting_files(input_path):
+    for p in iter_meeting_files(input_path):   
         meeting = load_meeting(p, input_path / "roles.csv")
         for utt in meeting.utterances:
             X.append(utt.text)

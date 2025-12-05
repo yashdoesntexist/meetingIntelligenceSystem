@@ -7,6 +7,9 @@ import pandas as pd
 import typer
 from rich import print
 
+
+ # in this file i had to use utt roles and the parsed for the firt fucntion 
+ 
 from config import RAW_DIR, DEFAULT_OUTPUT_JSON, PROCESSED_DIR
 from ami_loader import load_meeting, Utterance
 from action_rules import extract_task_and_deadline
@@ -67,3 +70,10 @@ def main(
 
 if __name__ == "__main__":
     app()
+# Updated 
+# Updated 
+# Updated 
+# Updated 
+# Updated 
+# Updated 
+# Final 

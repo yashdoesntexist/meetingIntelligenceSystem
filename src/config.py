@@ -1,5 +1,7 @@
 from pathlib import Path
-
+#Configuration Settings
+#Author: Meriem Lmoubariki
+#Project-wide configuration and paths
 
 ROOT = Path(__file__).resolve().parent.parent
 

@@ -5,6 +5,10 @@ from typing import List, Dict
 import csv
 
 
+ 
+#Loads and preprocesses AMI meeting corpus data
+# I considered defining additional classes here, but decided it would be unnecessarily complex.
+
 @dataclass
 class Utterance:
     speaker: str
@@ -37,8 +41,8 @@ def load_roles(roles_path: Path) -> Dict[str, str]:
 def load_meeting(transcript_path: Path, roles_path: Path) -> Meeting:
     """
     Load a meeting from a simple transcript file:
-    Each line: SPEAKER: text
-    If no colon, speaker defaults to UNK.
+    Each line: SPEAKER: text , 
+    If no colon, speaker defaults to UNK. 
     """
     utterances: List[Utterance] = []
     with transcript_path.open(encoding="utf-8") as f:
@@ -62,3 +66,5 @@ def load_meeting(transcript_path: Path, roles_path: Path) -> Meeting:
         utterances=utterances,
         roles=roles,
     )
+# Updated 
+# Updated 
